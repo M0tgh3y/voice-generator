@@ -80,6 +80,8 @@ for g in range(GENS):
 
     if g % 1000 == 0 or g == 19999:
         print(f"Gen {g} | fitness: {best_fit}")
+        
+    if g % 2000 == 0 or g == 19999:
         ravand.append(best)
         filename = f"ravand/gen_{g}.wav"
         audio = librosa.feature.inverse.mfcc_to_audio(
