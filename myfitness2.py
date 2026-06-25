@@ -4,6 +4,7 @@ import soundfile as sf
 import matplotlib.pyplot as plt
 import time
 import os
+import winsound
 
 start_time = time.perf_counter()
 
@@ -80,6 +81,19 @@ for g in range(GENS):
     if g % 1000 == 0 or g == 19999:
         print(f"Gen {g} | fitness: {best_fit}")
         ravand.append(best)
+        filename = f"ravand/gen_{g}.wav"
+        audio = librosa.feature.inverse.mfcc_to_audio(
+            best,
+            sr=sr
+        )
+
+        sf.write(filename, audio, sr)
+
+        winsound.PlaySound(
+            filename,
+            winsound.SND_FILENAME |
+            winsound.SND_ASYNC
+        )
 
     new_pop = population[:5]
 
@@ -145,22 +159,3 @@ plt.title("Best Fitness Per Generation")
 plt.grid(True)
 
 plt.show()
-
-# -------------------
-# Tabdil array ravand
-# -------------------
-for i, mfcc in enumerate(ravand):
-
-    audio = librosa.feature.inverse.mfcc_to_audio(
-        mfcc,
-        sr=sr
-    )
-
-    filename = os.path.join(
-        folder_name,
-        f"gen_{i*1000}.wav"
-    )
-
-    sf.write(filename, audio, sr)
-
-print("All files saved.")
