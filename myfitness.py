@@ -44,8 +44,14 @@ population = [create_individual() for _ in range(POP_SIZE)]
 # Fitness
 # -------------------
 def fitness(ind):
-    mse = np.mean((target_mfcc - ind) ** 2)
-    return -mse
+    a = target_mfcc.flatten()
+    b = ind.flatten()
+
+    similarity = np.dot(a, b) / (
+        np.linalg.norm(a) * np.linalg.norm(b) + 1e-8
+    )
+
+    return similarity
 
 # -------------------
 # GA loop
