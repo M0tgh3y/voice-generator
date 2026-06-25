@@ -15,7 +15,7 @@ y = y / np.max(np.abs(y))
 # Feature extraction
 # -------------------
 target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=65)
-print(target_mfcc.shape)
+# print(target_mfcc.shape)
 # dar inja darim 20 ta az vizhegi haye voice asli ra kharej mikonim va dr yek shekl matrisi zakhire mikonim
 
 # -------------------
@@ -65,15 +65,15 @@ for g in range(GENS):
     if g % 1000 == 0 or g == 19999:
         print(f"Gen {g} | fitness: {best_fit}")
 
-    new_pop = population[:3]
+    new_pop = population[:5]
 
     while len(new_pop) < POP_SIZE:
 
-        i1 = np.random.randint(0, 3)
-        i2 = np.random.randint(0, 3)
+        i1 = np.random.randint(0, 5)
+        i2 = np.random.randint(0, 5)
 
         while i1 == i2:
-            i2 = np.random.randint(3, 20)
+            i2 = np.random.randint(5, 20)
 
         p1 = population[i1]
         p2 = population[i2]
