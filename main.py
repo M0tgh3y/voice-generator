@@ -44,8 +44,9 @@ population = [create_individual() for _ in range(POP_SIZE)]
 # Fitness
 # -------------------
 def fitness(ind):
-    mse = np.mean((target_mfcc - ind) ** 2)
-    return -mse
+    diff = target_mfcc - ind
+    fro_norm = np.linalg.norm(diff, 'fro')
+    return -fro_norm
 
 # -------------------
 # GA loop
