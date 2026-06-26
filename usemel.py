@@ -24,8 +24,15 @@ y = y / np.max(np.abs(y))
 # -------------------
 # Feature extraction
 # -------------------
-target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=65)
-# print(target_mfcc.shape)
+target_mel = librosa.feature.melspectrogram(
+    y=y,
+    sr=sr,
+    n_mels=128,
+    power=2
+)
+
+target_mel = librosa.power_to_db(target_mel)
+# print(mel.shape)
 # dar inja darim 20 ta az vizhegi haye voice asli ra kharej mikonim va dr yek shekl matrisi zakhire mikonim
 
 # -------------------
@@ -34,18 +41,18 @@ target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=65)
 POP_SIZE = 20
 GENS = 20000
 
-mfcc_min = target_mfcc.min(axis=1, keepdims=True)
+mel_min = target_mel.min(axis=1, keepdims=True)
 # print("mfcc min ra chap mikone")
 # print(mfcc_min.shape)
-mfcc_max = target_mfcc.max(axis=1, keepdims=True)
+mel_max = target_mel.max(axis=1, keepdims=True)
 # print("mfcc max ra chap mikone")
 # print(mfcc_max.shape)
 
 def create_individual():
     return np.random.uniform(
-        mfcc_min,
-        mfcc_max,
-        target_mfcc.shape
+        mel_min,
+        mel_max,
+        target_mel.shape
     )
 
 population = [create_individual() for _ in range(POP_SIZE)]
@@ -53,7 +60,7 @@ population = [create_individual() for _ in range(POP_SIZE)]
 # -------------------
 # Fitness
 # -------------------
-target_flat = target_mfcc.ravel()
+target_flat = target_mel.ravel()
 target_norm = np.linalg.norm(target_flat)
 
 def fitness(ind):
@@ -136,9 +143,14 @@ for g in range(GENS):
 # -------------------
 best = population[0]
 
-reconstructed = librosa.feature.inverse.mfcc_to_audio(best)
+mel_power = librosa.db_to_power(best)
 
-sf.write("output.wav", reconstructed, sr)
+audio = librosa.feature.inverse.mel_to_audio(
+    mel_power,
+    sr=sr
+)
+
+sf.write("output.wav", audio, sr)
 
 print("Done → output.wav")
 

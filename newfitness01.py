@@ -24,7 +24,7 @@ y = y / np.max(np.abs(y))
 # -------------------
 # Feature extraction
 # -------------------
-target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=65)
+target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=80)
 # print(target_mfcc.shape)
 # dar inja darim 20 ta az vizhegi haye voice asli ra kharej mikonim va dr yek shekl matrisi zakhire mikonim
 
