@@ -163,25 +163,26 @@ for g in range(GENS): # ? chatgpt
 
         #child = (p1 + p2) / 2
 
-        # oon code bala dar vaghe hamoon paiinie, vali mikhastam tasir bishtar kardan az valed behtaro bebinam
-        # (inam kheyli kar saz nabood. choon dashtim ba adad kar mikardim na masala ba shekl matrix.)
+        # oon code bala darvaghe hamoon paiinie, vali mikhastam tasir bishtar kardan az valed behtaro bebinam
+        # (inam kheyli kar saz nabood. choon dashtim ba adad kar mikardim na masalan ba shekl matrix.)
+        # (manzoor az shekl matrix, block block kardane. (test kardam khoob nashod.))
 
         #darsadjahesh = 0.99
         #if np.random.rand() < darsadjahesh:
         sigma = max(0.5 * (1 - g/GENS), 0.01)
         child += np.random.normal(0, sigma, child.shape)
         # nokte i ke fahmidam in bood ke age hame bache haro hamishe jahesh bedim zoodtar be javab behtar 
-        # miresim. montaha jajhat inke dar nasl haye nazdik be jah, jahesh kam bashe sigma ro jarif kardim 
+        # miresim. montaha jajhat inke dar nasl haye nazdik be javab, jahesh kam bashe sigma ro tarif kardim.
         # dar avayel sigma bozorge va jahesh ham bozorge, dar avakher jahesh kame va sigma ham koochike.
 
         new_pop.append(child) # ? chatgpt
-        # ezafe kardan bache be jamiat jadidemoon
+        # ezafe kardan bache be pop jadidemoon
 
     population = new_pop # ? chatgpt
-    # jagozari jamiat jadid bejaye ghabli
+    # jagozari pop jadid bejaye ghabli
 
 # -------------------
-# Reconstruct (approx)
+# Sakht voice behtarin
 # -------------------
 best = population[0] # ? chatgpt
 voiceAkhar = librosa.feature.inverse.mfcc_to_audio(best) # ? chatgpt
