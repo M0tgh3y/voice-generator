@@ -64,9 +64,7 @@ def fitness(ind):
         np.linalg.norm(ind_flat) * target_norm + 1e-8
     )
 
-    smooth = np.mean(np.abs(np.diff(ind, axis=1)))
-
-    return sim - 0.005 * smooth
+    return sim
 
 # -------------------
 # GA loop
