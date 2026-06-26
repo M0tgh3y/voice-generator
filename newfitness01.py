@@ -53,21 +53,19 @@ population = [create_individual() for _ in range(POP_SIZE)]
 # -------------------
 # Fitness
 # -------------------
+target_flat = target_mfcc.ravel()
+target_norm = np.linalg.norm(target_flat)
+
 def fitness(ind):
-    sims = []
+    ind_flat = ind.ravel()
 
-    for i in range(target_mfcc.shape[0]):
-        a = target_mfcc[i]
-        b = ind[i]
+    sim = np.dot(ind_flat, target_flat) / (
+        np.linalg.norm(ind_flat) * target_norm + 1e-8
+    )
 
-        s = np.dot(a, b) / (
-            np.linalg.norm(a) *
-            np.linalg.norm(b) + 1e-8
-        )
+    mse = np.mean((ind - target_mfcc) ** 2)
 
-        sims.append(s)
-
-    return np.mean(sims)
+    return 0.9 * sim + 0.1 * np.exp(-mse)
 
 # -------------------
 # GA loop
