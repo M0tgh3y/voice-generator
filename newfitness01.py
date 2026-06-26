@@ -9,11 +9,11 @@ import winsound
 start_time = time.perf_counter()
 
 # sakht array for ravand jaghir
-ravand = []
+# ravand = []
 
 # sakht poshe braye zakhire ravand ha
-folder_name = "ravand"
-os.makedirs(folder_name, exist_ok=True)
+# folder_name = "ravand"
+# os.makedirs(folder_name, exist_ok=True)
 
 # -------------------
 # Load audio
@@ -83,7 +83,7 @@ for g in range(GENS):
 
     if g % 1000 == 0 or g == 19999:
         print(f"Gen {g} | fitness: {best_fit}")
-        
+    """    
     if g % 2000 == 0 or g == 19999:
         ravand.append(best)
         filename = f"ravand/gen_{g}.wav"
@@ -98,7 +98,8 @@ for g in range(GENS):
             filename,
             winsound.SND_FILENAME |
             winsound.SND_ASYNC
-        )
+        ) 
+        """
 
     new_pop = population[:5]
 
@@ -123,7 +124,7 @@ for g in range(GENS):
         # darsadjahesh = 0.99
 
         #if np.random.rand() < darsadjahesh:
-        sigma = max(0.5 * (1 - g/GENS), 0.01)
+        sigma = max(0.5 * (1-g/GENS)**2, 0.01)
         child += np.random.normal(0, sigma, child.shape)
 
         new_pop.append(child)
