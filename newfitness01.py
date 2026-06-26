@@ -63,8 +63,6 @@ def fitness(ind):
         np.linalg.norm(ind_flat) * target_norm + 1e-8
     )
 
-    mse = np.mean((ind - target_mfcc) ** 2)
-
     return sim
 
 # -------------------
@@ -121,7 +119,7 @@ for g in range(GENS):
 
         # child = (p1 + p2) / 2
 
-        darsadjahesh = 0.99
+        darsadjahesh = 0.2
 
         if np.random.rand() < darsadjahesh:
             sigma = max(0.5 * (1 - g/GENS), 0.01)
