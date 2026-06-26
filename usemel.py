@@ -79,7 +79,8 @@ def fitness(ind, g):
 
         audio = librosa.feature.inverse.mel_to_audio(
             librosa.db_to_power(ind),
-            sr=sr
+            sr=sr,
+            length=len(y)
         )
 
         audio = audio[:len(y)]
