@@ -54,16 +54,20 @@ population = [create_individual() for _ in range(POP_SIZE)]
 # Fitness
 # -------------------
 def fitness(ind):
-    row_range = np.max(target_mfcc, axis=1) - np.min(target_mfcc, axis=1)
-    row_range = np.where(row_range == 0, 1e-8, row_range)
+    sims = []
 
-    normalized_error = ((ind - target_mfcc) / row_range[:, None]) ** 2
+    for i in range(target_mfcc.shape[0]):
+        a = target_mfcc[i]
+        b = ind[i]
 
-    rmse = np.sqrt(np.mean(normalized_error))
+        s = np.dot(a, b) / (
+            np.linalg.norm(a) *
+            np.linalg.norm(b) + 1e-8
+        )
 
-    score = 1.0 - rmse
+        sims.append(s)
 
-    return score
+    return np.mean(sims)
 
 # -------------------
 # GA loop
