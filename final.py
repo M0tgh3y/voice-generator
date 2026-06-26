@@ -22,7 +22,7 @@ import winsound # ? chatgpt
 # az winsound baraye pakhsh seda dar lahze estefade mishe.
 
 start_time = time.perf_counter() # ? chatgpt
-# shoroo andaze gereftan
+# shoroo andaze gereftan zaman
 
 # -------------------
 # Sakht array for ravand jaghir
@@ -100,8 +100,9 @@ def fitness(ind): # ? chatgpt
     return sim # ? chatgpt
 # ! tozih in ghesmat be soorat kamel dar file hast. dar inja baraye kholase goftan:
 # matrix hara be array yek bodi tabdil mikonim. 
-# hala ba estefade az formool zarb dakheli miaim va cos andaze zavie beineshoono bedast miarim.
+# hala ba estefade az formool zarb dakheli miaim va cos zavie beineshoono bedast miarim.
 # harche ke cos be 1 nazdik tar bashe yani fasele do bordar sefre va rooye ham dige hastan.
+# fitnesesham mishe hamoon cos zavie beineshoon.
 
 # -------------------
 # GA loop
