@@ -80,6 +80,9 @@ def create_individual(): # ? chatgpt
     )
 
 population = [create_individual() for _ in range(POP_SIZE)] # ? chatgpt
+# dar in bakhsh ba estefade az min va max har satr miaym va jamiat avalie misazim.
+# betori ke dar har satr random bein min & max bashe, ta javab ha kheyli behtar beshan.
+# va bad array population ra misazim ke toosh 20 ta az in array haye (70 * 204) hast.
 
 # -------------------
 # Fitness
@@ -95,11 +98,16 @@ def fitness(ind): # ? chatgpt
     ) # ? chatgpt
 
     return sim # ? chatgpt
+# ! tozih in ghesmat be soorat kamel dar file hast. dar inja baraye kholase goftan:
+# matrix hara be array yek bodi tabdil mikonim. 
+# hala ba estefade az formool zarb dakheli miaim va cos andaze zavie beineshoono bedast miarim.
+# harche ke cos be 1 nazdik tar bashe yani fasele do bordar sefre va rooye ham dige hastan.
 
 # -------------------
 # GA loop
 # -------------------
-fitness_history = [] # ? chatgpt
+fitness_history = []
+# baraye inke akhare kar rooye nemoodar neshoon bedim
 
 for g in range(GENS): # ? chatgpt
 
@@ -107,9 +115,11 @@ for g in range(GENS): # ? chatgpt
     best = population[0] # ? chatgpt
     best_fit = fitness(best) # ? chatgpt
     fitness_history.append(best_fit) # ? chatgpt
+    # pop ra moratab mikonim ta behtarin pop biad aval array
 
     if g % 1000 == 0 or g == 19999:
         print(f"Gen {g} | fitness: {best_fit}")
+        # har 1000 bar fitness behtarin ta oon lahze ro chap mikone
         
     if g % 2000 == 0 or g == 19999:
         ravand.append(best)
@@ -125,18 +135,23 @@ for g in range(GENS): # ? chatgpt
             filename,
             winsound.SND_FILENAME |
             winsound.SND_ASYNC
-        ) 
+        )
+    # har 2000 bar ye file soti misaze va oono pakhsh mikone
         
-
     new_pop = population[:5]
+    # 5 taye aval ro bedoone taghir mizare toye pop badi
 
     while len(new_pop) < POP_SIZE: # ? chatgpt
+        # baraye 15 taye badi miad va bache haro hesab mikone
 
         i1 = np.random.randint(0, 5)
         i2 = np.random.randint(0, 5)
+        # as 5 taye aval random 2 ta parents bar midare
 
         while i1 == i2:
             i2 = np.random.randint(5, 20)
+        # inja baraye inke yekam bekham jahesh bedam, age pop ha mese ham boodan biad , p2 ro az 15
+        # taye badi bardare. (kheyli komak konande nabood.)
 
         p1 = population[i1]
         p2 = population[i2]
@@ -147,28 +162,39 @@ for g in range(GENS): # ? chatgpt
             child = 0.5 * p1 + 0.5 * p2
 
         #child = (p1 + p2) / 2
+
+        # oon code bala dar vaghe hamoon paiinie, vali mikhastam tasir bishtar kardan az valed behtaro bebinam
+        # (inam kheyli kar saz nabood. choon dashtim ba adad kar mikardim na masala ba shekl matrix.)
+
         #darsadjahesh = 0.99
         #if np.random.rand() < darsadjahesh:
         sigma = max(0.5 * (1 - g/GENS), 0.01)
         child += np.random.normal(0, sigma, child.shape)
+        # nokte i ke fahmidam in bood ke age hame bache haro hamishe jahesh bedim zoodtar be javab behtar 
+        # miresim. montaha jajhat inke dar nasl haye nazdik be jah, jahesh kam bashe sigma ro jarif kardim 
+        # dar avayel sigma bozorge va jahesh ham bozorge, dar avakher jahesh kame va sigma ham koochike.
 
         new_pop.append(child) # ? chatgpt
+        # ezafe kardan bache be jamiat jadidemoon
 
     population = new_pop # ? chatgpt
+    # jagozari jamiat jadid bejaye ghabli
 
 # -------------------
 # Reconstruct (approx)
 # -------------------
 best = population[0] # ? chatgpt
-reconstructed = librosa.feature.inverse.mfcc_to_audio(best) # ? chatgpt
-sf.write("output.wav", reconstructed, sr) # ? chatgpt
+voiceAkhar = librosa.feature.inverse.mfcc_to_audio(best) # ? chatgpt
+sf.write("output.wav", voiceAkhar, sr) # ? chatgpt
 print("Done → output.wav") # ? chatgpt
+# inja darim bad az 20000 bar behtarin bache i ke peyda kardim ro file soti sho misazim.
 
 # -------------------
 # Time ejraye barname
 # -------------------
 end_time = time.perf_counter() # ? chatgpt
 print(f"Execution Time: {end_time - start_time:.4f} seconds") # ? chatgpt
+# inja mishe payan barname va zaman ro baramoon chap mikone.
 
 # -------------------
 # Table for fitness
@@ -180,3 +206,4 @@ plt.ylabel("Fitness")
 plt.title("Best Fitness Per Generation")
 plt.grid(True)
 plt.show()
+# rasm nemoodar bad az payan barname.
