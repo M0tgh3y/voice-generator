@@ -32,8 +32,6 @@ target_mel = librosa.feature.melspectrogram(
 )
 
 target_mel = librosa.power_to_db(target_mel)
-# print(mel.shape)
-# dar inja darim 20 ta az vizhegi haye voice asli ra kharej mikonim va dr yek shekl matrisi zakhire mikonim
 
 # -------------------
 # GA settings
