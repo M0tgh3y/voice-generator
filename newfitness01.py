@@ -122,11 +122,11 @@ for g in range(GENS):
 
         # child = (p1 + p2) / 2
 
-        darsadjahesh = 0.2
+        # darsadjahesh = 0.99
 
-        if np.random.rand() < darsadjahesh:
-            sigma = max(0.5 * (1 - g/GENS), 0.01)
-            child += np.random.normal(0, sigma, child.shape)
+        #if np.random.rand() < darsadjahesh:
+        sigma = max(0.5 * (1 - g/GENS), 0.01)
+        child += np.random.normal(0, sigma, child.shape)
 
         new_pop.append(child)
 
