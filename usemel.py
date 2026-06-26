@@ -63,15 +63,33 @@ population = [create_individual() for _ in range(POP_SIZE)]
 target_flat = target_mel.ravel()
 target_norm = np.linalg.norm(target_flat)
 
-def fitness(ind):
+def fitness(ind, g):
 
-    ind_flat = ind.ravel()
+    if g < 19990:
 
-    sim = np.dot(ind_flat, target_flat) / (
-        np.linalg.norm(ind_flat) * target_norm + 1e-8
-    )
+        ind_flat = ind.ravel()
 
-    return sim
+        sim = np.dot(ind_flat, target_flat) / (
+            np.linalg.norm(ind_flat) * target_norm + 1e-8
+        )
+
+        return sim
+
+    else:
+
+        audio = librosa.feature.inverse.mel_to_audio(
+            librosa.db_to_power(ind),
+            sr=sr
+        )
+
+        audio = audio[:len(y)]
+
+        sim = np.dot(audio, y) / (
+            np.linalg.norm(audio) *
+            np.linalg.norm(y) + 1e-8
+        )
+
+        return sim
 
 # -------------------
 # GA loop
@@ -80,11 +98,15 @@ fitness_history = []
 
 for g in range(GENS):
 
-    population = sorted(population, key=fitness, reverse=True)
+    population = sorted(
+        population,
+        key=lambda ind: fitness(ind, g),
+        reverse=True
+    )
 
     best = population[0]
 
-    best_fit = fitness(best)
+    best_fit = fitness(best, g)
 
     fitness_history.append(best_fit)
 
