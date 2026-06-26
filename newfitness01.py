@@ -65,7 +65,7 @@ def fitness(ind):
 
     mse = np.mean((ind - target_mfcc) ** 2)
 
-    return 0.5 * sim + 0.5 * np.exp(-mse)
+    return 0.8 * sim + 0.2 * np.exp(-mse)
 
 # -------------------
 # GA loop
