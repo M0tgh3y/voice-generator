@@ -20,18 +20,14 @@ start_time = time.perf_counter()
 # -------------------
 y, sr = librosa.load("target.wav", sr=22050)
 y = y / np.max(np.abs(y))
+duration = librosa.get_duration(y=y, sr=sr)
 
 # -------------------
 # Feature extraction
 # -------------------
-target_mel = librosa.feature.melspectrogram(
-    y=y,
-    sr=sr,
-    n_mels=128,
-    power=2
-)
-
-target_mel = librosa.power_to_db(target_mel)
+# target_mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=65)
+# print(target_mfcc.shape)
+# dar inja darim 20 ta az vizhegi haye voice asli ra kharej mikonim va dr yek shekl matrisi zakhire mikonim
 
 # -------------------
 # GA settings
@@ -39,33 +35,61 @@ target_mel = librosa.power_to_db(target_mel)
 POP_SIZE = 20
 GENS = 20000
 
-mel_min = target_mel.min(axis=1, keepdims=True)
-# print("mfcc min ra chap mikone")
-# print(mfcc_min.shape)
-mel_max = target_mel.max(axis=1, keepdims=True)
-# print("mfcc max ra chap mikone")
-# print(mfcc_max.shape)
+N_SINES = 20
+
+FREQ_MIN = 50
+FREQ_MAX = 4000
+
+AMP_MIN = 0
+AMP_MAX = 1
+
+PHASE_MIN = 0
+PHASE_MAX = 2*np.pi
 
 def create_individual():
-    return np.random.uniform(
-        mel_min,
-        mel_max,
-        target_mel.shape
-    )
+
+    ind = []
+    for i in range(N_SINES):
+        freq = np.random.uniform(50,4000)
+        amp = np.random.uniform(0,1)
+        phase = np.random.uniform(0,2*np.pi)
+        ind.extend([freq,amp,phase])
+    return np.array(ind)
 
 population = [create_individual() for _ in range(POP_SIZE)]
 
 # -------------------
+# Make voices
+# -------------------
+def synthesize(ind):
+
+    t = np.linspace(0,duration,int(sr*duration))
+
+    y = np.zeros_like(t)
+
+    for i in range(N_SINES):
+
+        freq = ind[3*i]
+
+        amp = ind[3*i+1]
+
+        phase = ind[3*i+2]
+
+        y += amp*np.sin(2*np.pi*freq*t+phase)
+
+    return y
+
+# -------------------
 # Fitness
 # -------------------
-target_flat = target_mel.ravel()
-target_norm = np.linalg.norm(target_flat)
-
 def fitness(ind):
-    ind_flat = ind.ravel()
 
-    sim = np.dot(ind_flat, target_flat) / (
-        np.linalg.norm(ind_flat) * target_norm + 1e-8
+    audio = synthesize(ind)
+
+    audio = audio / (np.max(np.abs(audio)) + 1e-8)
+
+    sim = np.dot(audio, y) / (
+        np.linalg.norm(audio) * np.linalg.norm(y) + 1e-8
     )
 
     return sim
@@ -77,11 +101,7 @@ fitness_history = []
 
 for g in range(GENS):
 
-    population = sorted(
-        population,
-        key=fitness,
-        reverse=True
-    )
+    population = sorted(population, key=fitness, reverse=True)
 
     best = population[0]
 
@@ -144,12 +164,7 @@ for g in range(GENS):
 # -------------------
 best = population[0]
 
-mel_power = librosa.db_to_power(best)
-
-audio = librosa.feature.inverse.mel_to_audio(
-    mel_power,
-    sr=sr
-)
+audio = synthesize(best)
 
 sf.write("output.wav", audio, sr)
 
