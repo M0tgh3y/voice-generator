@@ -57,13 +57,16 @@ target_flat = target_mfcc.ravel()
 target_norm = np.linalg.norm(target_flat)
 
 def fitness(ind):
+
     ind_flat = ind.ravel()
 
     sim = np.dot(ind_flat, target_flat) / (
         np.linalg.norm(ind_flat) * target_norm + 1e-8
     )
 
-    return sim
+    smooth = np.mean(np.abs(np.diff(ind, axis=1)))
+
+    return sim - 0.005 * smooth
 
 # -------------------
 # GA loop
